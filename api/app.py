@@ -64,7 +64,7 @@ def handle_preflight():
 
 # ── Routes ────────────────────────────────────────────────────
 @app.route('/', methods=['GET'])
-def health():
+def index():
     return jsonify({
         'status': 'ColdChain ML API running',
         'port': 5000,
@@ -75,6 +75,10 @@ def health():
         },
         'training_samples': META['training_samples']
     })
+
+@app.route('/health', methods=['GET'])
+def health():
+    return jsonify({'status': 'healthy'})
 
 @app.route('/predict', methods=['POST', 'OPTIONS'])
 def predict():

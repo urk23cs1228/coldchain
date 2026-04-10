@@ -13,11 +13,11 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
+    - name: Set Docker to Minikube
+      run: minikube docker-env | Invoke-Expression
+
     - name: Build Docker image
       run: docker build -t coldchain-ai:latest .
-
-    - name: Load image into Minikube
-      run: minikube image load coldchain-ai:latest
 
     - name: Replace image placeholder in deployment
       run: |
