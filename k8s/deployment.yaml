@@ -1,0 +1,58 @@
+# ColdChain AI — Kubernetes Deployment
+# Phase 4/6: Deploy ML backend to AKS
+# Apply: kubectl apply -f k8s/deployment.yaml
+#
+# IMAGE_PLACEHOLDER is replaced by GitHub Actions with the real ACR image tag
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: coldchain-ai
+  labels:
+    app: coldchain-ai
+    version: "1.0"
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: coldchain-ai
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0        # Zero-downtime deploy
+  template:
+    metadata:
+      labels:
+        app: coldchain-ai
+    spec:
+      containers:
+        - name: coldchain-ai
+          image: IMAGE_PLACEHOLDER   # Replaced by CI/CD pipeline
+          ports:
+            - containerPort: 5000
+          # Liveness probe — restart pod if Flask stops responding
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 5000
+            initialDelaySeconds: 20
+            periodSeconds: 15
+            failureThreshold: 3
+          # Readiness probe — only send traffic when Flask is ready
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 5000
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "250m"
+            limits:
+              memory: "1Gi"
+              cpu: "500m"
+          env:
+            - name: PYTHONUNBUFFERED
+              value: "1"

@@ -1,0 +1,46 @@
+{
+  "features": [
+    "food_encoded",
+    "vehicle_encoded",
+    "tod_encoded",
+    "travel_hours",
+    "ambient_temp_c",
+    "humidity_pct",
+    "container_temp_c",
+    "vehicle_compatible",
+    "temp_deviation",
+    "food_sensitivity",
+    "vehicle_efficiency"
+  ],
+  "food_classes": [
+    "Dairy",
+    "Eggs",
+    "Fish",
+    "Fruits",
+    "Meat",
+    "Milk",
+    "Vegetables"
+  ],
+  "vehicle_classes": [
+    "Frozen Container",
+    "Normal Truck",
+    "Refrigerated Truck"
+  ],
+  "tod_classes": [
+    "afternoon",
+    "evening",
+    "morning",
+    "night"
+  ],
+  "risk_classes": [
+    "High",
+    "Low",
+    "Medium"
+  ],
+  "classifier_accuracy": 0.921,
+  "regressor_mae": 0.0328,
+  "regressor_r2": 0.9636,
+  "risk_accuracy": 0.914,
+  "training_samples": 4000,
+  "test_samples": 1000
+}

@@ -1,0 +1,19 @@
+# ColdChain AI — Kubernetes Service
+# Exposes the ML backend via Azure Load Balancer with a public IP
+# Apply: kubectl apply -f k8s/service.yaml
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: coldchain-ai-service
+  labels:
+    app: coldchain-ai
+spec:
+  type: LoadBalancer           # Azure assigns a public IP automatically
+  selector:
+    app: coldchain-ai
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80                 # External port (browsers use :80)
+      targetPort: 5000         # Flask container port

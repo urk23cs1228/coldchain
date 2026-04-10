@@ -1,0 +1,10 @@
+# ColdChain AI — Terraform Variables
+# Copy this to terraform.tfvars and fill in your values
+# Do NOT commit terraform.tfvars to Git (it's in .gitignore)
+
+resource_group_name = "coldchain-rg"
+location            = "East US"
+acr_name            = "coldchainacr"     # Must be globally unique
+aks_cluster_name    = "coldchain-aks"
+node_count          = 2
+node_vm_size        = "Standard_B2s"

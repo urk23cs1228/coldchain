@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ColdChain AI — New Shipment</title>
+  <link rel="stylesheet" href="css/style.css"/>
+  <script src="js/theme.js"></script>
+</head>
+<body>
+<div class="shell">
+  <header class="topbar">
+    <a href="index.html" class="logo">
+      <div class="logo-mark"><svg viewBox="0 0 16 16"><path d="M8 1L15 4.5v7L8 15 1 11.5v-7z"/></svg></div>
+      Cold<span>Chain</span>&nbsp;AI
+    </a>
+    <nav class="topbar-nav">
+      <a href="index.html">Dashboard</a>
+      <a href="shipment.html" class="active">New Shipment</a>
+      <a href="monitor.html">Live Monitor</a>
+      <a href="incidents.html">Incidents</a>
+      <a href="analytics.html">Analytics</a>
+    </nav>
+    <div class="topbar-right">
+      <div class="live-badge" id="api-badge"><div class="live-dot" id="api-dot"></div><span id="api-status">Checking...</span></div>
+      <button class="theme-toggle" onclick="toggleTheme()" title="Toggle theme">☀️</button>
+      <div class="avatar" style="background:linear-gradient(135deg,var(--teal),var(--blue));color:#fff;font-weight:700;font-size:12px;">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/></svg>
+      </div>
+    </div>
+  </header>
+
+  <div class="page-body">
+    <aside class="sidebar">
+      <div class="sidebar-section">Operations</div>
+      <a href="index.html"><svg viewBox="0 0 20 20" fill="currentColor"><rect x="2" y="2" width="7" height="7" rx="1.5"/><rect x="11" y="2" width="7" height="7" rx="1.5"/><rect x="2" y="11" width="7" height="7" rx="1.5"/><rect x="11" y="11" width="7" height="7" rx="1.5"/></svg>Dashboard</a>
+      <a href="shipment.html" class="active"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M10 4v12M4 10h12" stroke-linecap="round"/></svg>New Shipment</a>
+      <a href="monitor.html"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="10" cy="10" r="8"/><circle cx="10" cy="10" r="3"/></svg>Live Monitor</a>
+      <div class="sidebar-section">Analytics</div>
+      <a href="incidents.html"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M10 2L18 17H2L10 2z" stroke-linejoin="round"/><path d="M10 8v4M10 14v1" stroke-linecap="round"/></svg>Incidents</a>
+      <a href="analytics.html"><svg viewBox="0 0 20 20" fill="currentColor"><rect x="2" y="12" width="4" height="6" rx="1"/><rect x="8" y="7" width="4" height="11" rx="1"/><rect x="14" y="2" width="4" height="16" rx="1"/></svg>Analytics</a>
+    </aside>
+
+    <main class="main-content">
+      <div class="page-header">
+        <div>
+          <div class="page-title">New Shipment</div>
+          <div class="page-sub">Enter route — distance &amp; weather auto-fetched · 3 ML models predict risk</div>
+        </div>
+      </div>
+
+      <div class="how-strip">
+        <div class="how-step"><div class="step-icon">📍</div><div class="step-num">STEP 01</div><div class="step-name">Route</div><div class="step-desc">From → To</div></div>
+        <div class="how-step"><div class="step-icon">🌤️</div><div class="step-num">STEP 02</div><div class="step-name">Live Weather</div><div class="step-desc">Auto-fetched</div></div>
+        <div class="how-step"><div class="step-icon">🗺️</div><div class="step-num">STEP 03</div><div class="step-name">Road Distance</div><div class="step-desc">Real km &amp; hrs</div></div>
+        <div class="how-step"><div class="step-icon">🧠</div><div class="step-num">STEP 04</div><div class="step-name">ML Predict</div><div class="step-desc">3 models run</div></div>
+        <div class="how-step"><div class="step-icon">📊</div><div class="step-num">STEP 05</div><div class="step-name">Results</div><div class="step-desc">Full report</div></div>
+      </div>
+
+      <div class="g2">
+        <!-- LEFT FORM -->
+        <div class="card">
+          <div class="card-title">Shipment Inputs</div>
+          <div style="display:flex;flex-direction:column;gap:14px;">
+
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label class="form-label">From Location</label>
+                <input class="form-input" id="f-from" placeholder="e.g. Chennai" autocomplete="off"/>
+              </div>
+              <div class="form-group">
+                <label class="form-label">To Location</label>
+                <input class="form-input" id="f-to" placeholder="e.g. Coimbatore" autocomplete="off"/>
+              </div>
+            </div>
+
+            <button id="fetch-btn" class="btn btn-ghost" onclick="fetchRouteData()" style="width:100%;justify-content:center;gap:8px;">
+              🌐 Fetch Live Weather &amp; Road Distance
+            </button>
+            <div id="api-strip" style="display:none;border-radius:10px;padding:12px 14px;font-size:12px;font-family:var(--mono);line-height:1.8;"></div>
+
+            <div class="form-group">
+              <label class="form-label">Food Type</label>
+              <select class="form-input" id="f-food">
+                <option value="Milk">Milk — 2°C to 4°C · perishable</option>
+                <option value="Meat">Meat — -2°C to 2°C · highly perishable</option>
+                <option value="Fish">Fish — 0°C to 2°C · very perishable</option>
+                <option value="Vegetables">Vegetables — 4°C to 8°C</option>
+                <option value="Fruits">Fruits — 5°C to 10°C</option>
+                <option value="Dairy">Dairy Products — 2°C to 6°C</option>
+                <option value="Eggs">Eggs — 2°C to 5°C</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Vehicle Type</label>
+              <select class="form-input" id="f-vehicle">
+                <option value="Normal Truck">Normal Truck — no cooling</option>
+                <option value="Refrigerated Truck" selected>Refrigerated Truck — 2°C to 8°C</option>
+                <option value="Frozen Container">Frozen Container — -10°C to 5°C</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Start Time</label>
+              <select class="form-input" id="f-tod">
+                <option value="morning">Morning — 6AM to 12PM</option>
+                <option value="afternoon" selected>Afternoon — 12PM to 6PM</option>
+                <option value="evening">Evening — 6PM to 10PM</option>
+                <option value="night">Night — 10PM to 6AM</option>
+              </select>
+            </div>
+
+            <div style="border-top:1px solid var(--border);padding-top:14px;">
+              <div style="font-size:11px;color:var(--text3);font-family:var(--mono);margin-bottom:12px;">AUTO-FILLED BY API · edit if needed</div>
+              <div class="form-grid-2">
+                <div class="form-group"><label class="form-label">Travel Hours</label><input class="form-input" id="f-hours" type="number" value="10" min="1" max="120" step="0.5"/></div>
+                <div class="form-group"><label class="form-label">Ambient Temp (°C)</label><input class="form-input" id="f-ambient" type="number" value="36"/></div>
+                <div class="form-group"><label class="form-label">Humidity (%)</label><input class="form-input" id="f-humidity" type="number" value="72"/></div>
+                <div class="form-group"><label class="form-label">Quantity (units)</label><input class="form-input" id="f-qty" type="number" value="200"/></div>
+                <div class="form-group"><label class="form-label">Cost per unit (₹)</label><input class="form-input" id="f-cost" type="number" value="50"/></div>
+              </div>
+            </div>
+
+            <div style="display:flex;gap:10px;padding-top:4px;">
+              <button class="btn btn-primary" id="predict-btn" onclick="runPrediction()">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6" stroke="currentColor" stroke-width="1.5"/><path d="M4.5 7l2 2 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                Run ML Prediction
+              </button>
+              <button class="btn btn-ghost" onclick="clearAll()">Clear</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT RESULTS -->
+        <div style="display:flex;flex-direction:column;gap:14px;">
+          <div id="pane-empty" class="card" style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:50px 24px;gap:14px;text-align:center;">
+            <div style="font-size:44px;opacity:0.2;">🧠</div>
+            <div style="font-size:15px;font-weight:700;color:var(--text2);">3 ML Models Ready</div>
+            <div style="font-size:13px;color:var(--text3);max-width:240px;line-height:1.65;">Enter route, fetch live data, then click <strong style="color:var(--teal);">Run ML Prediction</strong></div>
+            <div style="display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:6px;">
+              <span class="badge badge-teal">RF Classifier 92.1%</span>
+              <span class="badge badge-teal">GB Regressor R²=0.96</span>
+              <span class="badge badge-teal">RF Risk 91.4%</span>
+            </div>
+          </div>
+          <div id="pane-loading" class="card loading-overlay" style="display:none;">
+            <div class="spinner"></div>
+            <div class="loading-steps">
+              <div class="loading-step" id="ls1">Sending features to ML models...</div>
+              <div class="loading-step" id="ls2">Random Forest classification...</div>
+              <div class="loading-step" id="ls3">Gradient Boosting probability...</div>
+              <div class="loading-step" id="ls4">Building risk report...</div>
+            </div>
+          </div>
+          <div id="pane-error" style="display:none;background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.25);border-radius:12px;padding:16px;font-size:13px;color:var(--red);line-height:1.7;"></div>
+          <div id="pane-fallback" style="display:none;background:rgba(0,212,170,0.07);border:1px solid rgba(0,212,170,0.25);border-radius:10px;padding:14px;font-size:12px;color:var(--teal);line-height:1.7;">
+            <strong>✓ Built-in ML engine active</strong> — Flask not running<br>
+            For trained model accuracy: <code style="background:rgba(0,0,0,0.2);padding:2px 8px;border-radius:4px;">python api/app.py</code>
+          </div>
+          <div id="pane-results" style="display:none;flex-direction:column;gap:16px;"></div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<style>
+.spinner{width:36px;height:36px;border:3px solid var(--border2);border-top-color:var(--teal);border-radius:50%;animation:spin 0.8s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.loading-step{font-size:12px;font-family:var(--mono);color:var(--text3);opacity:0.3;transition:opacity 0.3s;}
+.loading-step.on{opacity:1;color:var(--teal);}
+</style>
+
+<script src="js/app.js"></script>
+<script>
+let _routeData = null;
+
+// ── Fetch real weather + distance ─────────────────────────
+async function fetchRouteData() {
+  const from = document.getElementById('f-from').value.trim();
+  const to   = document.getElementById('f-to').value.trim();
+  if (!from || !to) { setStrip('error','⚠️ Enter both From and To locations first.'); return; }
+
+  const btn = document.getElementById('fetch-btn');
+  btn.disabled = true; btn.textContent = '⏳ Fetching...';
+  setStrip('loading','🌐 Fetching weather &amp; road data...');
+
+  const [weather, route] = await Promise.all([fetchWeather(from), fetchRoadDistance(from, to)]);
+  _routeData = { weather, route };
+
+  if (route) {
+    document.getElementById('f-hours').value = route.durationHrs;
+  }
+  if (weather) {
+    document.getElementById('f-ambient').value  = weather.temp;
+    document.getElementById('f-humidity').value = weather.humidity;
+  }
+
+  const wLine = weather
+    ? `🌡️ <strong>${weather.temp}°C</strong>, feels ${weather.feels}°C · ${weather.humidity}% humidity · <em>${weather.desc}</em> · 💨${weather.wind}km/h in <strong>${weather.city}</strong>`
+    : `🌡️ <span style="color:var(--amber)">Weather unavailable — using manual values</span>`;
+  const rLine = route
+    ? `🗺️ <strong>${route.distanceKm} km</strong> · Est. <strong>${route.durationHrs} hrs</strong> · <em>${route.source}</em> (auto-filled)`
+    : `🗺️ <span style="color:var(--amber)">Distance not found — enter travel hours manually</span>`;
+
+  setStrip('success', wLine + '<br>' + rLine);
+  btn.disabled = false; btn.textContent = '🔄 Re-fetch Weather & Distance';
+}
+
+function setStrip(type, html) {
+  const el = document.getElementById('api-strip');
+  el.style.display = 'block';
+  const s = type==='error'   ? 'background:rgba(239,68,68,0.07);border:1px solid rgba(239,68,68,0.2);color:var(--red);'
+           : type==='loading' ? 'background:rgba(59,130,246,0.07);border:1px solid rgba(59,130,246,0.2);color:var(--blue);'
+                              : 'background:rgba(0,212,170,0.07);border:1px solid rgba(0,212,170,0.2);color:var(--text2);';
+  el.style.cssText = 'display:block;border-radius:10px;padding:12px 14px;font-size:12px;font-family:var(--mono);line-height:1.8;' + s;
+  el.innerHTML = html;
+}
+
+// ── Prediction ────────────────────────────────────────────
+async function runPrediction() {
+  const btn  = document.getElementById('predict-btn');
+  const from = document.getElementById('f-from').value.trim();
+  const to   = document.getElementById('f-to').value.trim();
+
+  if (!from || !to) {
+    document.getElementById('pane-error').textContent = '⚠️ Enter both From and To locations.';
+    showPane('pane-error'); return;
+  }
+
+  const food  = document.getElementById('f-food').value;
+  const veh   = document.getElementById('f-vehicle').value;
+  const tod   = document.getElementById('f-tod').value;
+  const hours = parseFloat(document.getElementById('f-hours').value) || 10;
+  const amb   = parseFloat(document.getElementById('f-ambient').value) || 35;
+  const hum   = parseFloat(document.getElementById('f-humidity').value) || 65;
+  const qty   = parseInt(document.getElementById('f-qty').value) || 200;
+  const cost  = parseFloat(document.getElementById('f-cost').value) || 50;
+  const distKm= _routeData?.route?.distanceKm || null;
+
+  btn.disabled = true;
+  btn.innerHTML = '<div class="spinner" style="width:14px;height:14px;border-width:2px;display:inline-block;vertical-align:middle;margin-right:6px;"></div> Predicting...';
+  document.getElementById('pane-fallback').style.display = 'none';
+  showPane('pane-loading');
+  animateLoadingSteps(['ls1','ls2','ls3','ls4']);
+
+  const payload = {
+    food_type:food, vehicle_type:veh, time_of_day:tod,
+    travel_hours:hours, ambient_temp_c:amb, humidity_pct:hum,
+    quantity:qty, cost_per_unit:cost, distKm,
+  };
+
+  try {
+    const data = await ColdChainAPI.predict(payload);
+    if (distKm && data.prediction_summary) data.prediction_summary.estimated_distance_km = distKm;
+    const finalDist = distKm || data.prediction_summary?.estimated_distance_km || Math.round(hours*55);
+
+    buildResults(data, from, to, hours, finalDist);
+    showPane('pane-results');
+    if (data._source === 'local_fallback') document.getElementById('pane-fallback').style.display = 'block';
+
+    // ✅ Save with travelHours so monitor status works correctly
+    ShipmentStore.save({
+      from, to, food, vehicle: veh,
+      travelHours: hours,
+      distanceKm : finalDist,
+      weather    : _routeData?.weather || null,
+      result     : data,
+    });
+
+  } catch(e) {
+    document.getElementById('pane-error').textContent = '⚠️ Error: ' + e.message;
+    showPane('pane-error');
+  }
+
+  btn.disabled = false;
+  btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6" stroke="currentColor" stroke-width="1.5"/><path d="M4.5 7l2 2 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg> Run ML Prediction';
+}
+
+function showPane(id) {
+  ['pane-empty','pane-loading','pane-error','pane-results'].forEach(p=>{
+    const el=document.getElementById(p); if(el) el.style.display='none';
+  });
+  const el=document.getElementById(id);
+  if(el) el.style.display=(id==='pane-results')?'flex':'block';
+}
+
+function buildResults(data, from, to, hours, dist) {
+  const ml  = data.ml_predictions;
+  const sum = data.prediction_summary;
+  const sp  = parseFloat(sum.spoilage_probability_pct);
+  const col = spoilageColor(sp);
+  const cls = barClass(sp);
+  const rp  = ml.model_3_risk?.risk_probabilities || {};
+  const priColor = sum.delivery_priority==='Critical'||sum.delivery_priority==='High'?'var(--red)':sum.delivery_priority==='Medium'?'var(--amber)':'var(--teal)';
+
+  const rpBars = Object.entries(rp).map(([k,v])=>`
+    <div style="margin-bottom:8px;">
+      <div style="display:flex;justify-content:space-between;font-size:11px;font-family:var(--mono);margin-bottom:3px;">
+        <span style="color:var(--text3)">${k}</span><span>${parseFloat(v).toFixed(1)}%</span>
+      </div>
+      <div class="risk-bar-track"><div class="risk-bar-fill ${k==='High'?'high':k==='Medium'?'medium':'safe'}" style="width:${Math.min(parseFloat(v)||0,100)}%"></div></div>
+    </div>`).join('');
+
+  const actions = [
+    sum.vehicle_compatible
+      ? `Maintain container at <strong>${sum.recommended_container_temp}</strong> throughout journey`
+      : `⚠️ <strong>Switch vehicle immediately</strong> — cannot maintain ${sum.recommended_container_temp}`,
+    `Monitor temperature every 2 hours — shelf life: <strong>${sum.shelf_life_remaining_hours} hrs</strong> remaining`,
+    sp>50 ? `<strong style="color:var(--red)">PRIORITIZE delivery — HIGH spoilage risk</strong>` : `Standard delivery schedule acceptable`,
+    `Priority: <strong>${sum.delivery_priority}</strong> · Est. loss if spoiled: <strong style="color:var(--red)">${inr(sum.estimated_loss_inr)}</strong>`,
+  ];
+
+  document.getElementById('pane-results').innerHTML = `
+    <div class="ml-model-strip fadein">
+      <div class="ml-model-chip"><div class="name">RF Classifier</div><div class="score" style="color:${col}">${ml.model_1_classifier.prediction}</div><div class="algo">${ml.model_1_classifier.confidence}% conf · ${ml.model_1_classifier.accuracy}</div></div>
+      <div class="ml-model-chip"><div class="name">GB Regressor</div><div class="score" style="color:${col}">${sp.toFixed(1)}%</div><div class="algo">Spoilage probability</div></div>
+      <div class="ml-model-chip"><div class="name">RF Risk</div><div class="score" style="color:${col}">${sum.risk_level}</div><div class="algo">Risk level · ${ml.model_3_risk?.accuracy||''}</div></div>
+    </div>
+    <div class="spoilage-hero fadein">
+      <div style="text-align:center;min-width:115px;">
+        <div style="font-size:52px;font-weight:800;font-family:var(--mono);line-height:1;letter-spacing:-2px;color:${col}">${sp.toFixed(1)}%</div>
+        <div style="font-size:10px;color:var(--text3);font-family:var(--mono);margin-top:4px;">SPOILAGE RISK</div>
+      </div>
+      <div style="width:1px;background:var(--border);align-self:stretch;"></div>
+      <div style="flex:1;display:flex;flex-direction:column;gap:10px;">
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+          <span class="badge badge-${cls}" style="font-size:12px;padding:5px 14px;">${sum.risk_level} Risk</span>
+          <span style="font-size:12px;color:var(--text3);font-family:var(--mono);">Score: ${sum.risk_score}/100</span>
+        </div>
+        <div class="risk-bar-track" style="height:8px;"><div class="risk-bar-fill ${cls}" style="width:${Math.min(sp,100)}%;transition:width 1s ease;"></div></div>
+        <div style="font-size:12px;color:var(--text3);">${from} → ${to} &nbsp;·&nbsp; <span style="font-family:var(--mono);">${dist} km · ${hours}h</span></div>
+      </div>
+    </div>
+    <div class="route-vis fadein">
+      <div class="rv-city"><div class="rv-dot"></div><div class="rv-city-name">${from}</div><div class="rv-city-sub">Origin</div></div>
+      <div class="rv-line"><div class="rv-truck">🚛</div><div class="rv-meta">${dist} km · ${hours} hrs</div></div>
+      <div class="rv-city"><div class="rv-dot dest"></div><div class="rv-city-name">${to}</div><div class="rv-city-sub">Destination</div></div>
+    </div>
+    <div class="stat-grid-4 fadein">
+      <div class="stat-box"><div class="stat-box-key">Container Temp</div><div class="stat-box-val" style="color:var(--blue);font-size:14px;">${sum.recommended_container_temp}</div></div>
+      <div class="stat-box"><div class="stat-box-key">Shelf Life Left</div><div class="stat-box-val" style="color:${(sum.shelf_life_remaining_hours||99)<8?'var(--red)':'var(--text)'}">${sum.shelf_life_remaining_hours} hrs</div></div>
+      <div class="stat-box"><div class="stat-box-key">Priority</div><div class="stat-box-val" style="font-size:15px;color:${priColor}">${sum.delivery_priority}</div></div>
+      <div class="stat-box"><div class="stat-box-key">Est. Loss</div><div class="stat-box-val" style="color:var(--red);font-size:14px;">${inr(sum.estimated_loss_inr)}</div></div>
+    </div>
+    <div class="g2 fadein">
+      <div class="ai-section">
+        <div class="ai-section-title">Vehicle Status</div>
+        <div class="ai-section-body">
+          ${sum.vehicle_compatible?'<span style="color:var(--teal);font-weight:600;">✓ Compatible</span>':'<span style="color:var(--red);font-weight:600;">✗ Incompatible — switch vehicle!</span>'}
+          <br><span style="font-size:12px;color:var(--text3);margin-top:6px;display:block;">${sum.vehicle_note||''}</span>
+        </div>
+      </div>
+      <div class="ai-section"><div class="ai-section-title">Risk Probabilities</div>${rpBars}</div>
+    </div>
+    <div class="ai-section fadein">
+      <div class="ai-section-title">Recommended Actions</div>
+      <div class="action-list">${actions.map((a,i)=>`<div class="action-item"><div class="action-num">${i+1}</div><div>${a}</div></div>`).join('')}</div>
+    </div>
+    ${sum.cold_stop_needed?`<div class="ai-section fadein" style="border-color:rgba(59,130,246,0.3);"><div class="ai-section-title" style="color:var(--blue);">❄️ Cold Storage Stop Recommended</div><div class="ai-section-body">Long route or high spoilage risk — find certified cold storage within 15km of your route.</div></div>`:''}
+  `;
+}
+
+function clearAll() {
+  showPane('pane-empty');
+  document.getElementById('pane-fallback').style.display = 'none';
+  document.getElementById('api-strip').style.display = 'none';
+  _routeData = null;
+  document.getElementById('fetch-btn').textContent = '🌐 Fetch Live Weather & Road Distance';
+}
+
+// Flask badge
+(async()=>{
+  const ok = await ColdChainAPI.checkFlask();
+  const badge=document.getElementById('api-badge'),dot=document.getElementById('api-dot'),status=document.getElementById('api-status');
+  if(ok){status.textContent='Flask ML Online';dot.style.background='#00d4aa';}
+  else{status.textContent='Built-in ML Active';badge.style.background='rgba(245,158,11,0.12)';badge.style.borderColor='rgba(245,158,11,0.3)';dot.style.background='#f59e0b';status.style.color='#f59e0b';}
+})();
+</script>
+</body>
+</html>

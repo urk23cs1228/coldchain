@@ -1,0 +1,31 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: self-hosted
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Build Docker image
+      run: docker build -t coldchain-ai:latest .
+
+    - name: Load image into Minikube
+      run: minikube image load coldchain-ai:latest
+
+    - name: Replace image placeholder in deployment
+      run: |
+        (Get-Content k8s\deployment.yaml) -replace 'IMAGE_PLACEHOLDER', 'coldchain-ai:latest' | Set-Content k8s\deployment_temp.yaml
+        Move-Item k8s\deployment_temp.yaml k8s\deployment.yaml -Force
+
+    - name: Deploy to Kubernetes
+      run: kubectl apply -f k8s/
+
+    - name: Start Minikube tunnel
+      run: Start-Process minikube -ArgumentList "tunnel" -NoNewWindow
